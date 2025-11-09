@@ -272,11 +272,12 @@ _There is a `start.sh` script to run a bot in ubuntu servers. It will basically 
 ### Available options
 
 <!-- auto generated command line output -->
+
 ```bash
 $ lncrawl -h
-                                                                                                                                                                                                                                   
- Usage: lncrawl [OPTIONS] COMMAND [ARGS]...                                                                                                                                                                                        
-                                                                                                                                                                                                                                   
+
+ Usage: lncrawl [OPTIONS] COMMAND [ARGS]...
+
 ╭─ Options ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╮
 │ --verbose             -l            Log levels: -l = warn, -ll = info, -lll = debug                                                                                                                                             │
 │ --config              -c      PATH  Config file                                                                                                                                                                                 │
@@ -295,6 +296,7 @@ $ lncrawl -h
 ╰─────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────╯
 
 ```
+
 <!-- auto generated command line output -->
 
 ### Example Usage
@@ -519,7 +521,6 @@ We are supporting 455 sources and 384 crawlers.
 </tbody>
 </table>
 
-
 ### `ar` Arabic
 
 <table>
@@ -546,7 +547,6 @@ We are supporting 455 sources and 384 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `en` English
 
@@ -2255,7 +2255,6 @@ We are supporting 455 sources and 384 crawlers.
 </tbody>
 </table>
 
-
 ### `es` Spanish; Castilian
 
 <table>
@@ -2282,7 +2281,6 @@ We are supporting 455 sources and 384 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `fr` French
 
@@ -2325,7 +2323,6 @@ We are supporting 455 sources and 384 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `id` Indonesian
 
@@ -2434,7 +2431,6 @@ We are supporting 455 sources and 384 crawlers.
 </tbody>
 </table>
 
-
 ### `pt` Portuguese
 
 <table>
@@ -2466,7 +2462,6 @@ We are supporting 455 sources and 384 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `ru` Russian
 
@@ -2540,7 +2535,6 @@ We are supporting 455 sources and 384 crawlers.
 </tbody>
 </table>
 
-
 ### `tr` Turkish
 
 <table>
@@ -2557,7 +2551,6 @@ We are supporting 455 sources and 384 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `vi` Vietnamese
 
@@ -2590,7 +2583,6 @@ We are supporting 455 sources and 384 crawlers.
 </tr>
 </tbody>
 </table>
-
 
 ### `zh` Chinese
 
@@ -2973,10 +2965,8 @@ We are supporting 455 sources and 384 crawlers.
 - FB2
 - LIT
 - LRF
-- OEB
 - PDB
 - RB
-- SNB
 - TCR
 
 ## Sponsors
