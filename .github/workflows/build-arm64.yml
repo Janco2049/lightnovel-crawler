@@ -1,4 +1,4 @@
-name: Build Standalone ARM64 Binary from PyPI
+name: Build ARM64 Binary with ARM Runner
 
 on:
   push:
@@ -8,30 +8,43 @@ on:
 jobs:
   build-arm64:
     runs-on: ubuntu-latest
-    name: Build for Linux ARM64
+    name: Build for Linux ARM64 (aarch64)
 
     steps:
       - name: 📥 Checkout Repository
         uses: actions/checkout@v4
 
-      - name: 🐍 Set up Python 3.11
-        uses: actions/setup-python@v5
+      - name: 🚀 Run Build on ARM64 Architecture
+        # Esta es la acción que sugeriste. Ejecutará los comandos de 'run' en un entorno aarch64.
+        uses: uraimo/run-on-arch-action@v2
         with:
-          python-version: '3.11'
+          arch: aarch64
+          distro: jammy  # Usamos Ubuntu 22.04 (Jammy)
 
-      - name: 🛠️ Build Standalone Executable for ARM64
-        uses: espressif/python-binary-action@master
-        with:
-          # --- CORRECCIÓN DE SINTAXIS ---
-          # Eliminadas las comillas simples alrededor de 'setuptools<60'
-          install-deps-command: "uv pip install setuptools<60 lightnovel-crawler pyinstaller"
-          scripts: 'lncrawl'
-          output-dir: 'dist'
-          target-platform: 'linux-aarch64'
-          # Desactiva el comando de prueba que fallaba
-          test-command-args: ''
+          # Los siguientes comandos se ejecutan DENTRO del entorno ARM64
+          run: |
+            # Instala las herramientas básicas necesarias
+            apt-get update -y
+            apt-get install -y python3-pip python3-venv
+
+            # Crea y activa un entorno virtual de Python
+            python3 -m venv .venv
+            source .venv/bin/activate
+
+            # Actualiza pip e instala las dependencias
+            # Usamos el requirements.txt del proyecto y añadimos pyinstaller + la corrección de setuptools
+            pip install --upgrade pip
+            pip install 'setuptools<60' pyinstaller -r requirements.txt
+
+            # Compila la aplicación. Todos estos comandos ya los habíamos descubierto:
+            # --onefile: crea un solo binario.
+            # --name lncrawl: nombra el ejecutable.
+            # --paths .: soluciona el problema de importación.
+            # lncrawl/main.py: es el script de entrada correcto.
+            pyinstaller --onefile --name lncrawl --paths . lncrawl/main.py
 
       - name: 📤 Upload Artifact
+        # Este paso se ejecuta fuera del emulador, una vez que el binario ya está creado en la carpeta 'dist'
         uses: actions/upload-artifact@v4
         with:
           name: lightnovel-crawler-linux-arm64
