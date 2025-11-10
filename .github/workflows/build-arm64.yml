@@ -1,56 +1,32 @@
-# Nombre del Workflow para identificarlo en la pestaña Actions
-name: Build Standalone Binary for Linux ARM64
+name: Build arm64 Executable
 
-# Triggers: Cuándo se debe ejecutar este workflow
 on:
-  # Permite ejecutarlo manualmente desde la interfaz de GitHub
-  workflow_dispatch:
-
-  # También se ejecuta automáticamente al hacer un push a la rama main
   push:
-    branches:
-      - main
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  # Nombre del único trabajo en este workflow
-  build-arm64-binary:
-    # El nombre que se mostrará en GitHub para este trabajo
-    name: Build for Linux ARM64
-
-    # Usamos un runner específico de ARM64 ofrecido por GitHub
-    runs-on: ubuntu-latest-arm64
-
+  build:
+    runs-on: ubuntu-24.04-arm
     steps:
-      # Paso 1: Descargar el código del repositorio
-      - name: Checkout repository
-        uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
 
-      # Paso 2: Configurar el entorno de Python
-      - name: Set up Python 3
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10' # Puedes especificar una versión si lo necesitas
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.11' # O la versión que prefieras
 
-      # Paso 3: Instalar dependencias del proyecto y PyInstaller
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pyinstaller
+    - name: Build executable
+      uses: espressif/python-binary-action@master
+      with:
+        scripts: 'lncrawl.py'
+        output-dir: './dist'
+        target-platform: 'linux-aarch64'
 
-      # Paso 4: Crear el binario standalone con PyInstaller
-      - name: Build standalone binary
-        run: |
-          # --onefile: crea un único ejecutable
-          # --name: especifica el nombre del archivo de salida
-          # El punto de entrada es 'crawler.py'
-          pyinstaller --onefile --name lncrawl-arm64 crawler.py
-
-      # Paso 5: Subir el binario compilado como un artefacto
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          # Nombre del artefacto que podrás descargar
-          name: lncrawl-linux-arm64
-          # Ruta al archivo generado por PyInstaller
-          path: dist/lncrawl-arm64
+    - name: Upload artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: lightnovel-crawler-linux-arm64
+        path: ./dist
