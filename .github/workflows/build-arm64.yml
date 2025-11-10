@@ -2,16 +2,12 @@ name: Build Standalone ARM64 Binary
 
 on:
   push:
-    # Asegúrate de que la rama a la que subes tus cambios esté aquí
-    # El original usa 'master', pero los nuevos repositorios usan 'main'
     branches: [ main, master, dev ]
-  # También puedes activarlo manualmente desde la pestaña "Actions" en GitHub
   workflow_dispatch:
 
 jobs:
   build-arm64:
-    # NO incluyas la condición "if" aquí
-    runs-on: ubuntu-latest # Usamos un runner estándar y cross-compilamos
+    runs-on: ubuntu-latest
     name: Build for Linux ARM64
 
     steps:
@@ -25,10 +21,14 @@ jobs:
           cache: pip
 
       - name: 🛠️ Build Standalone Executable for ARM64
-        uses: espressif/python-binary-action@master # Usar v1 es más estable
+        uses: espressif/python-binary-action@master
         with:
-          # El script que se convierte en ejecutable
-          script-file: 'lncrawl.py'
+          # --- CORRECCIÓN 1: 'script-file' -> 'scripts' (plural) ---
+          scripts: 'lncrawl.py'
+          
+          # --- CORRECCIÓN 2: Añadir el directorio de salida ---
+          output-dir: 'dist'
+          
           # La plataforma de destino
           target-platform: 'linux-aarch64'
 
@@ -36,5 +36,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: lightnovel-crawler-linux-arm64
-          # La acción guarda los resultados en el directorio "dist"
+          # Le decimos que suba el contenido de la carpeta 'dist'
           path: dist
