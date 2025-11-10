@@ -1,32 +1,40 @@
-name: Build arm64 Executable
+name: Build Standalone ARM64 Binary
 
 on:
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    # Asegúrate de que la rama a la que subes tus cambios esté aquí
+    # El original usa 'master', pero los nuevos repositorios usan 'main'
+    branches: [ main, master, dev ]
+  # También puedes activarlo manualmente desde la pestaña "Actions" en GitHub
+  workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-24.04-arm
+  build-arm64:
+    # NO incluyas la condición "if" aquí
+    runs-on: ubuntu-latest # Usamos un runner estándar y cross-compilamos
+    name: Build for Linux ARM64
+
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.11' # O la versión que prefieras
+      - name: 🐍 Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
 
-    - name: Build executable
-      uses: espressif/python-binary-action@master
-      with:
-        scripts: 'lncrawl.py'
-        output-dir: './dist'
-        target-platform: 'linux-aarch64'
+      - name: 🛠️ Build Standalone Executable for ARM64
+        uses: espressif/python-binary-action@v1 # Usar v1 es más estable
+        with:
+          # El script que se convierte en ejecutable
+          script-file: 'lncrawl.py'
+          # La plataforma de destino
+          target-platform: 'linux-aarch64'
 
-    - name: Upload artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: lightnovel-crawler-linux-arm64
-        path: ./dist
+      - name: 📤 Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lightnovel-crawler-linux-arm64
+          # La acción guarda los resultados en el directorio "dist"
+          path: dist
