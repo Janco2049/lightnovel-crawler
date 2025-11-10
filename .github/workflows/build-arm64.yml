@@ -1,63 +1,32 @@
-name: Build Linux ARM64 Binary
+name: Build Standalone arm64 Binary
 
 on:
-  # Ejecuta el workflow cuando se haga push a la rama 'arm64-build' (o la que uses)
   push:
-    branches:
-      - arm64-build
-  # Opcional: Permite ejecutar manualmente desde la interfaz de GitHub Actions
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
-  build_arm64:
-    # **¡La clave está aquí!** Usamos el runner nativo de ARM64 para Linux.
-    runs-on: ubuntu-22.04-arm64  
-
+  build-arm64:
+    runs-on: ubuntu-latest
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v4
-      
-    - name: Set up Python
-      # lightnovel-crawler funciona con Python 3.8+
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-        
-    - name: Install System Dependencies
-      # Estas son las dependencias comunes para la compilación de Python en Linux,
-      # especialmente para paquetes como lxml (necesario para el crawler).
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential libxml2-dev libxslt1-dev zlib1g-dev pkg-config
-        
-    - name: Install Python Dependencies and PyInstaller
-      # Necesitas PyInstaller para crear el ejecutable standalone
-      run: |
-        pip install --upgrade pip
-        pip install pyinstaller
-        # Instala el paquete del crawler. El proyecto original tiene un setup.py
-        pip install .
-        
-    - name: Build Standalone Executable
-      # **ATENCIÓN:** Tienes que verificar el script de PyInstaller que usa el autor original.
-      # Asumiré que el punto de entrada es 'lncrawl.py' y que el ejecutable se llamará 'lncrawl'.
-      # *Si el proyecto usa un comando diferente para empaquetar, debes cambiar esta línea.*
-      run: |
-        # Asumo que el punto de entrada principal es 'lncrawl', que se instala en el PATH
-        pyinstaller --onefile $(which lncrawl)
-        
-    - name: Rename and Prepare Artifact
-      run: |
-        mkdir release
-        mv dist/lncrawl release/lncrawl-linux-arm64
-        
-    - name: Upload Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: lncrawl-linux-arm64
-        path: release/lncrawl-linux-arm64
-        # Opcional: Subir también a un borrador de Release de GitHub
-        # uses: softprops/action-gh-release@v1
-        # if: startsWith(github.ref, 'refs/tags/')
-        # with:
-        #   files: release/lncrawl-linux-arm64
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21' # Puedes ajustar la versión de Go si es necesario
+
+      - name: Build arm64 binary
+        env:
+          GOOS: linux
+          GOARCH: arm64
+        run: go build -v -o lightnovel-crawler-linux-arm64 .
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lightnovel-crawler-linux-arm64
+          path: lightnovel-crawler-linux-arm64
