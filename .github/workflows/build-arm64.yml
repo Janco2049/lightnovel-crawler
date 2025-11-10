@@ -1,32 +1,25 @@
-name: Build Standalone arm64 Binary
+name: Build Standalone Linux ARM64
 
 on:
   push:
-    branches: [ master ]
-  pull_request:
-    branches: [ master ]
+    branches: [ "main", "dev" ]
   workflow_dispatch:
 
 jobs:
-  build-arm64:
+  build-linux-arm64:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - name: Build executable for linux-aarch64
+        uses: espressif/python-binary-action@v1
         with:
-          go-version: '1.21' # Puedes ajustar la versión de Go si es necesario
-
-      - name: Build arm64 binary
-        env:
-          GOOS: linux
-          GOARCH: arm64
-        run: go build -v -o lightnovel-crawler-linux-arm64 .
+          target: linux-aarch64
+          requirements: requirements.txt
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: lightnovel-crawler-linux-arm64
-          path: lightnovel-crawler-linux-arm64
+          name: lncrawl-linux-arm64
+          path: dist/lncrawl
