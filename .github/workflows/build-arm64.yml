@@ -23,11 +23,13 @@ jobs:
       - name: 🛠️ Build Standalone Executable for ARM64
         uses: espressif/python-binary-action@master
         with:
-          # --- CORRECCIÓN FINAL: Apuntar al script correcto dentro de la carpeta ---
           scripts: 'setup_pyi.py'
-          
           output-dir: 'dist'
           target-platform: 'linux-aarch64'
+          
+          # --- LA CORRECCIÓN FINAL ESTÁ AQUÍ ---
+          # Añade el directorio raíz a la ruta de búsqueda de PyInstaller
+          additional-args: '--paths .'
 
       - name: 📤 Upload Artifact
         uses: actions/upload-artifact@v4
