@@ -1,0 +1,33 @@
+name: Build Lightnovel Crawler ARM64
+
+on:
+  workflow_dispatch: # Permite iniciar el flujo de trabajo manualmente
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04-arm
+    steps:
+      - name: Checkout Lightnovel Crawler
+        uses: actions/checkout@v4
+        with:
+          repository: 'dipu-bd/lightnovel-crawler'
+          ref: 'master' # O la versión que prefieras
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Build executable
+        uses: espressif/python-binary-action@master
+        with:
+          scripts: 'lncrawl'
+          output-dir: './dist'
+          target-platform: 'linux-aarch64'
+          install-deps-command: 'pip install .'
+
+      - name: Upload Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: lightnovel-crawler-arm64
+          path: ./dist
