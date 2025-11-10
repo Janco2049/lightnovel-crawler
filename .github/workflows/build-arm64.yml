@@ -24,7 +24,7 @@ jobs:
         uses: espressif/python-binary-action@master
         with:
           # --- CORRECCIÓN FINAL: Apuntar al script correcto dentro de la carpeta ---
-          scripts: 'lncrawl/main.py'
+          scripts: 'setup_pyi.py'
           
           output-dir: 'dist'
           target-platform: 'linux-aarch64'
