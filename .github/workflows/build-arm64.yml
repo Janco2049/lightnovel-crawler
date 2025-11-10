@@ -23,18 +23,14 @@ jobs:
       - name: 🛠️ Build Standalone Executable for ARM64
         uses: espressif/python-binary-action@master
         with:
-          # --- CORRECCIÓN 1: 'script-file' -> 'scripts' (plural) ---
-          scripts: 'lncrawl.py'
+          # --- CORRECCIÓN FINAL: Apuntar al script correcto dentro de la carpeta ---
+          scripts: 'lncrawl/main.py'
           
-          # --- CORRECCIÓN 2: Añadir el directorio de salida ---
           output-dir: 'dist'
-          
-          # La plataforma de destino
           target-platform: 'linux-aarch64'
 
       - name: 📤 Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: lightnovel-crawler-linux-arm64
-          # Le decimos que suba el contenido de la carpeta 'dist'
           path: dist
