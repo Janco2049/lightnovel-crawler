@@ -1,4 +1,4 @@
-name: Build Standalone ARM64 Binary
+name: Build Standalone ARM64 Binary from PyPI
 
 on:
   push:
@@ -12,24 +12,30 @@ jobs:
 
     steps:
       - name: 📥 Checkout Repository
+        # Aún necesitamos este paso para que la acción pueda ejecutarse
         uses: actions/checkout@v4
 
       - name: 🐍 Set up Python 3.11
         uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-          cache: pip
 
       - name: 🛠️ Build Standalone Executable for ARM64
         uses: espressif/python-binary-action@master
         with:
-          scripts: 'setup_pyi.py'
+          # 1. Comando para instalar el paquete desde PyPI y la herramienta de compilación.
+          # Usamos "uv pip" porque es rápido y es el que usa la acción por defecto.
+          install-deps-command: "uv pip install lightnovel-crawler pyinstaller"
+
+          # 2. Apuntamos al script 'lncrawl' que fue instalado por pip en el entorno.
+          # Ya no es un archivo .py, sino el nombre del comando.
+          scripts: 'lncrawl'
+
+          # 3. Directorio donde se guardará el binario compilado.
           output-dir: 'dist'
+
+          # 4. La plataforma de destino que necesitas.
           target-platform: 'linux-aarch64'
-          
-          # --- LA CORRECCIÓN FINAL ESTÁ AQUÍ ---
-          # Añade el directorio raíz a la ruta de búsqueda de PyInstaller
-          additional-args: '--paths .'
 
       - name: 📤 Upload Artifact
         uses: actions/upload-artifact@v4
