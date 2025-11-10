@@ -25,7 +25,7 @@ jobs:
           cache: pip
 
       - name: 🛠️ Build Standalone Executable for ARM64
-        uses: espressif/python-binary-action@v1 # Usar v1 es más estable
+        uses: espressif/python-binary-action@master # Usar v1 es más estable
         with:
           # El script que se convierte en ejecutable
           script-file: 'lncrawl.py'
