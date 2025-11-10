@@ -22,17 +22,17 @@ jobs:
       - name: 🛠️ Build Standalone Executable for ARM64
         uses: espressif/python-binary-action@master
         with:
-          install-deps-command: "uv pip install 'setuptools<60' lightnovel-crawler pyinstaller"
+          # --- CORRECCIÓN DE SINTAXIS ---
+          # Eliminadas las comillas simples alrededor de 'setuptools<60'
+          install-deps-command: "uv pip install setuptools<60 lightnovel-crawler pyinstaller"
           scripts: 'lncrawl'
           output-dir: 'dist'
           target-platform: 'linux-aarch64'
-          
-          # --- LA SOLUCIÓN FINAL ESTÁ AQUÍ ---
-          # Desactiva el comando de prueba post-compilación para evitar el error de QEMU/GLIBC
+          # Desactiva el comando de prueba que fallaba
           test-command-args: ''
 
       - name: 📤 Upload Artifact
         uses: actions/upload-artifact@v4
         with:
           name: lightnovel-crawler-linux-arm64
-          path: dist```
+          path: dist
